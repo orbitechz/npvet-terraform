@@ -1,36 +1,21 @@
 # ./gke/main.tf
 
-# Provisiona o cluster GKE
+# Declara as variáveis que o módulo espera receber.
+# Provisiona o cluster GKE já com seu pool de nós configurado.
 resource "google_container_cluster" "primary" {
   name     = var.cluster_name
-  location = var.zone
   project  = var.project_id
+  location = var.zone
 
-  remove_default_node_pool = true
-  initial_node_count       = 1
+  # --- ALTERAÇÕES PRINCIPAIS ---
 
-  # Utiliza a rede padrão do GCP para simplificar
-  network    = "default"
-  subnetwork = "default"
+  # 1. Não vamos mais remover o pool de nós padrão.
+  remove_default_node_pool = false
 
-  # --- ADICIONE ESTE BLOCO AQUI ---
-  # Define a configuração de nó padrão para o próprio cluster,
-  # garantindo que qualquer nó temporário ou de controle use o disco correto.
-  node_config {
-    disk_type    = "pd-standard"
-    disk_size_gb = 100
-  }
-  # -----------------------------------
-}
+  # 2. Definimos o número de nós diretamente aqui.
+  initial_node_count = 2
 
-# Cria um pool de nós gerenciado e dedicado para nossas aplicações
-resource "google_container_node_pool" "primary_nodes" {
-  name     = "${google_container_cluster.primary.name}-node-pool"
-  location = var.region
-  cluster  = google_container_cluster.primary.name
-  
-  node_count = 2
-
+  # 3. Este bloco agora configura o pool de nós permanente do cluster.
   node_config {
     machine_type = "e2-medium"
     disk_type    = "pd-standard"
@@ -41,3 +26,6 @@ resource "google_container_node_pool" "primary_nodes" {
     ]
   }
 }
+
+# 4. O recurso 'google_container_node_pool' separado foi REMOVIDO,
+# pois não é mais necessário.
