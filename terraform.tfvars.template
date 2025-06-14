@@ -1,0 +1,5 @@
+
+project_id="seu-id-de-projeto-gcp"
+region="us-central1"
+cluster_name="producao"
+grafana_admin_password="SubstituaPorUmaSenhaMuitoForte123!"
