@@ -22,6 +22,10 @@ variable "grafana_admin_password" {
   sensitive   = true
 }
 
+variable "gke_zone" {
+  description = "Zona GCP específica para o cluster GKE (ex: us-central1-a)."
+  type        = string
+}
 # Configura o provedor do Google Cloud com as variáveis de entrada
 provider "google" {
   project = var.project_id
@@ -34,6 +38,7 @@ module "gke_cluster" {
   project_id   = var.project_id
   cluster_name = var.cluster_name
   region       = var.region
+  zone         = var.gke_zone
 }
 
 # Módulo para configurar o Kubernetes (instalar Prometheus + Grafana) 
