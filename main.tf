@@ -26,6 +26,13 @@ variable "gke_zone" {
   description = "Zona GCP específica para o cluster GKE (ex: us-central1-a)."
   type        = string
 }
+terraform {
+  backend "gcs" {
+    bucket  = "nome-super-unico-para-seu-tfstate" # O mesmo nome do bucket que você criou
+    prefix  = "gke/staging" # Um "caminho" dentro do bucket para organizar o estado
+  }
+}
+
 # Configura o provedor do Google Cloud com as variáveis de entrada
 provider "google" {
   project = var.project_id
