@@ -1,0 +1,53 @@
+# .github/workflows/deploy-staging.yml
+
+name: 'Deploy PROD - Infraestrutura com Terraform (JSON Key)'
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  terraform-deploy:
+    name: 'Terraform Deploy Produção'
+    runs-on: ubuntu-latest
+    environment: production
+    
+    # A permissão 'id-token: write' não é mais necessária para este método.
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout do Repositório
+        uses: actions/checkout@v4
+
+      # --- PASSO DE AUTENTICAÇÃO MODIFICADO ---
+      # Agora ele usa o conteúdo do segredo JSON diretamente.
+      - name: Autenticar no Google Cloud via Chave de Serviço
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          # O 'credentials_json' espera o CONTEÚDO do arquivo .json, 
+          # que estamos passando através do segredo do GitHub.
+          credentials_json: ${{ secrets.GCP_SA_KEY_PRODUCTION }}
+
+      - name: Verificar Autenticação GCP
+        run: |
+          echo "--- Verificando identidade autenticada ---"
+          gcloud auth list
+          echo "--- Verificando projeto configurado ---"
+          gcloud config list
+
+      - name: Setup do Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Executar Terraform para Produção
+        env:
+          # A senha do Grafana continua vindo de um segredo separado.
+          TF_VAR_grafana_admin_password: ${{ secrets.GRAFANA_ADMIN_PASSWORD }}
+        run: |
+          terraform init -backend-config=production.tfbackend
+          terraform workspace select production || terraform workspace new production
+          terraform plan -var-file="production.tfvars" -out=tfplan
+          terraform apply -auto-approve tfplan
