@@ -1,0 +1,4 @@
+project_id="mensal04"
+region="us-central1"
+cluster_name="npvet-prod"
+gke_zone="us-central1-a"

@@ -1,0 +1,4 @@
+project_id="mensal-staging"
+region="us-central1"
+cluster_name="npvet-staging"
+gke_zone="us-central1-a"
