@@ -47,7 +47,7 @@ jobs:
           # A senha do Grafana continua vindo de um segredo separado.
           TF_VAR_grafana_admin_password: ${{ secrets.GRAFANA_ADMIN_PASSWORD }}
         run: |
-          terraform init
+          terraform init -backend-config=staging.tfbackend
           terraform workspace select staging || terraform workspace new staging
           terraform plan -var-file="staging.tfvars" -out=tfplan
           terraform apply -auto-approve tfplan

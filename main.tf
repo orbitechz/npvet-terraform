@@ -27,19 +27,8 @@ variable "gke_zone" {
   type        = string
 }
 
-variable "bucket_name" {
-  description = "Bucket do Google Cloud Storage para armazenar o estado do Terraform."
-  type        = string
-}
-variable "bucket_prefix" {
-  description = "Prefixo dentro do bucket para organizar o estado do Terraform."
-  type        = string
-}
 terraform {
-  backend "gcs" {
-    bucket  = var.bucket_name 
-    prefix  = var.bucket_prefix
-  }
+  backend "gcs" {}
 }
 
 # Configura o provedor do Google Cloud com as variáveis de entrada

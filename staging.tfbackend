@@ -1,0 +1,2 @@
+bucket = "npvet-staging-terraform"
+prefix = "gke/staging"
