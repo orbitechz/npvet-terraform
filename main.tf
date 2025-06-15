@@ -26,10 +26,19 @@ variable "gke_zone" {
   description = "Zona GCP específica para o cluster GKE (ex: us-central1-a)."
   type        = string
 }
+
+variable "bucket_name" {
+  description = "Bucket do Google Cloud Storage para armazenar o estado do Terraform."
+  type        = string
+}
+variable "bucket_prefix" {
+  description = "Prefixo dentro do bucket para organizar o estado do Terraform."
+  type        = string
+}
 terraform {
   backend "gcs" {
-    bucket  = "nome-super-unico-para-seu-tfstate" # O mesmo nome do bucket que você criou
-    prefix  = "gke/staging" # Um "caminho" dentro do bucket para organizar o estado
+    bucket  = var.bucket_name 
+    prefix  = var.bucket_prefix
   }
 }
 
