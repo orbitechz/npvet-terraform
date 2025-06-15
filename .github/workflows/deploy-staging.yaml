@@ -43,6 +43,16 @@ jobs:
           service_account_email: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL_STAGING }}
           project_id: ${{ secrets.GCP_PROJECT_ID_STAGING }}
 
+      # --- ADICIONE ESTE PASSO DE DEBUG AQUI ---
+      - name: Verificar Autenticação GCP
+        run: |
+          echo "--- Verificando identidade autenticada ---"
+          gcloud auth list
+          echo "--- Verificando projeto configurado ---"
+          gcloud config list
+      # ------------------------------------------
+
+
       # Passo 3: Configura o Terraform no ambiente de execução.
       - name: Setup do Terraform
         uses: hashicorp/setup-terraform@v3
