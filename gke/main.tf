@@ -8,6 +8,7 @@ resource "google_container_cluster" "primary" {
   location = var.zone
 
   # --- ALTERAÇÕES PRINCIPAIS ---
+  deletion_protection = false
 
   # 1. Não vamos mais remover o pool de nós padrão.
   remove_default_node_pool = false
