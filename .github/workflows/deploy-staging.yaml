@@ -1,8 +1,7 @@
 # .github/workflows/deploy-staging.yml
 
-name: 'Deploy Staging - Infraestrutura com Terraform'
+name: 'Deploy Staging - Infraestrutura com Terraform (JSON Key)'
 
-# Gatilhos: A pipeline executa em pushes para a branch 'staging' ou manualmente.
 on:
   push:
     branches:
@@ -10,71 +9,45 @@ on:
   workflow_dispatch:
 
 jobs:
-  # O único job da pipeline, responsável pelo deploy.
   terraform-deploy:
     name: 'Terraform Deploy Staging'
-    # Usa a versão mais recente do Ubuntu como ambiente de execução.
     runs-on: ubuntu-latest
-
-    # Aponta para o ambiente 'staging' configurado no GitHub.
-    # Isso dá acesso aos segredos específicos deste ambiente.
     environment: staging
-
-    # Permissões necessárias para o workflow:
-    # 'id-token: write' é essencial para a autenticação segura com o GCP (OIDC).
-    # 'contents: read' permite que o job faça o checkout do código do repositório.
+    
+    # A permissão 'id-token: write' não é mais necessária para este método.
     permissions:
-      id-token: write
       contents: read
 
     steps:
-      # Passo 1: Clona o código do repositório para o ambiente de execução.
       - name: Checkout do Repositório
         uses: actions/checkout@v4
 
-      # Passo 2: Autenticação segura no Google Cloud.
-      # Usa o Workload Identity Federation, trocando um token do GitHub por um token de acesso do GCP.
-      # Os segredos são lidos do ambiente 'staging' do GitHub.
-      - name: Autenticar no Google Cloud
+      # --- PASSO DE AUTENTICAÇÃO MODIFICADO ---
+      # Agora ele usa o conteúdo do segredo JSON diretamente.
+      - name: Autenticar no Google Cloud via Chave de Serviço
         id: auth
         uses: google-github-actions/auth@v2
         with:
-          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER_STAGING }}
-          service_account_email: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL_STAGING }}
-          project_id: ${{ secrets.GCP_PROJECT_ID_STAGING }}
+          # O 'credentials_json' espera o CONTEÚDO do arquivo .json, 
+          # que estamos passando através do segredo do GitHub.
+          credentials_json: ${{ secrets.GCP_SA_KEY_STAGING }}
 
-      # --- ADICIONE ESTE PASSO DE DEBUG AQUI ---
       - name: Verificar Autenticação GCP
         run: |
           echo "--- Verificando identidade autenticada ---"
           gcloud auth list
           echo "--- Verificando projeto configurado ---"
           gcloud config list
-      # ------------------------------------------
 
-
-      # Passo 3: Configura o Terraform no ambiente de execução.
       - name: Setup do Terraform
         uses: hashicorp/setup-terraform@v3
 
-      # Passo 4: Executa os comandos do Terraform.
-      # O segredo do Grafana é injetado como uma variável de ambiente que o Terraform reconhece automaticamente.
       - name: Executar Terraform para Staging
         env:
-          # Mapeia o segredo do GitHub para uma variável de ambiente TF_VAR_.
-          # O Terraform usará isso para popular a variável 'grafana_admin_password'.
+          # A senha do Grafana continua vindo de um segredo separado.
           TF_VAR_grafana_admin_password: ${{ secrets.GRAFANA_ADMIN_PASSWORD }}
         run: |
-          # 1. Inicializa o Terraform, baixando providers e módulos.
           terraform init
-
-          # 2. Seleciona o workspace 'staging' para isolar o estado deste ambiente.
           terraform workspace select staging || terraform workspace new staging
-
-          # 3. Gera um plano de execução usando as variáveis de 'staging.tfvars'.
-          # O plano é salvo em um arquivo para garantir que o 'apply' execute exatamente o que foi planejado.
           terraform plan -var-file="staging.tfvars" -out=tfplan
-
-          # 4. Aplica o plano de execução para criar ou atualizar a infraestrutura.
-          # A flag -auto-approve é segura aqui porque estamos aplicando um plano já revisado.
           terraform apply -auto-approve tfplan
