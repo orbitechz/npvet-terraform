@@ -7,18 +7,18 @@
 
 ## Sumário
 
-1. [Visão Geral](#-visão-geral)
-2. [Diagrama de Arquitetura](#-diagrama-de-arquitetura)
-3. [Objetivo da Entrega](#-objetivo-da-entrega)
-4. [Ambientes e Estrutura](#-ambientes-e-estrutura)
-5. [Tecnologias Utilizadas](#-tecnologias-utilizadas)
-6. [Infraestrutura Provisionada](#️-infraestrutura-provisionada)  
-7. [CI/CD com GitHub Actions](#-cicd-com-github-actions)
-8. [Etapas automatizadas](#-etapas-automatizadas)
-9. [Observabilidade](#-observabilidade)
-10. [Estrutura do Repositório](#-estrutura-do-repositório)  
-11. [Execução Local](#-execução-local)  
-12. [Recursos Complementares](#-recursos-complementares)  
+1. [Visão Geral](#visão-geral)
+2. [Diagrama de Arquitetura](#diagrama-de-arquitetura)
+3. [Objetivo da Entrega](#objetivo-da-entrega)
+4. [Ambientes e Estrutura](#ambientes-e-estrutura)
+5. [Tecnologias Utilizadas](#tecnologias-utilizadas)
+6. [Infraestrutura Provisionada](#️infraestrutura-provisionada)  
+7. [CI/CD com GitHub Actions](#cicd-com-github-actions)
+8. [Etapas automatizadas](#etapas-automatizadas)
+9. [Observabilidade](#observabilidade)
+10. [Estrutura do Repositório](#estrutura-do-repositório)  
+11. [Execução Local](#execução-local)  
+12. [Recursos Complementares](#recursos-complementares)  
 
 ---
 
