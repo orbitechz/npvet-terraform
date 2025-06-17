@@ -51,11 +51,11 @@ module "kubernetes_config" {
   # Garante que o cluster exista antes de tentar configurar
 #   depends_on = [module.gke_cluster]
 
-  source = "./kubernetes"
-
-  # Passa as informações do cluster criado para o módulo de configuração
-  gke_cluster_name           = module.gke_cluster.name
-  gke_cluster_endpoint       = module.gke_cluster.endpoint
-  gke_cluster_ca_certificate = module.gke_cluster.ca_certificate
-  grafana_admin_password     = var.grafana_admin_password
+    source = "./kubernetes"
+    project_id                 = var.project_id
+    # Passa as informações do cluster criado para o módulo de configuração
+    gke_cluster_name           = module.gke_cluster.name
+    gke_cluster_endpoint       = module.gke_cluster.endpoint
+    gke_cluster_ca_certificate = module.gke_cluster.ca_certificate
+    grafana_admin_password     = var.grafana_admin_password
 }

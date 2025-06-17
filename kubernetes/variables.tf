@@ -22,3 +22,22 @@ variable "grafana_admin_password" {
   type        = string
   sensitive   = true
 }
+
+variable "grafana_ip" {
+  description = "Nome do endereço IP para o Grafana."
+  type        = string
+  default     = "npvet-grafana-production"
+}
+
+variable "project_id" {
+  description = "ID do projeto GCP onde o cluster GKE está localizado."
+  type        = string
+  sensitive = true
+}
+
+variable "region" {
+  description = "Região do GCP onde o cluster GKE está localizado."
+  type        = string
+  default     = "us-central1"
+  sensitive = false
+}
