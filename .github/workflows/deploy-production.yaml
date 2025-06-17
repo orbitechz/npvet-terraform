@@ -1,6 +1,6 @@
-# .github/workflows/deploy-staging.yml
+# .github/workflows/deploy-production.yml
 
-name: 'Deploy PROD - Infraestrutura com Terraform (JSON Key)'
+name: 'Deploy production - Infraestrutura com Terraform (JSON Key)'
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   terraform-deploy:
-    name: 'Terraform Deploy Produção'
+    name: 'Terraform Deploy production'
     runs-on: ubuntu-latest
     environment: production
     
@@ -42,7 +42,7 @@ jobs:
       - name: Setup do Terraform
         uses: hashicorp/setup-terraform@v3
 
-      - name: Executar Terraform para Produção
+      - name: Executar Terraform para production
         env:
           # A senha do Grafana continua vindo de um segredo separado.
           TF_VAR_grafana_admin_password: ${{ secrets.GRAFANA_ADMIN_PASSWORD }}
