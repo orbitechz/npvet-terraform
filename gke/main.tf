@@ -18,7 +18,7 @@ resource "google_container_cluster" "primary" {
 
   # 3. Este bloco agora configura o pool de nós permanente do cluster.
   node_config {
-    machine_type = "e2-medium"
+    machine_type = "n2-standard-4"
     disk_type    = "pd-standard"
     disk_size_gb = 100
 
