@@ -27,6 +27,12 @@ variable "gke_zone" {
   type        = string
 }
 
+variable "grafana_ip" {
+  description = "Nome do endereço IP para o Grafana."
+  type        = string
+  default     = "npvet-grafana-production"
+}
+
 terraform {
   backend "gcs" {}
 }
@@ -53,6 +59,7 @@ module "kubernetes_config" {
 
     source = "./kubernetes"
     project_id                 = var.project_id
+    grafana_ip = var.grafana_ip
     # Passa as informações do cluster criado para o módulo de configuração
     gke_cluster_name           = module.gke_cluster.name
     gke_cluster_endpoint       = module.gke_cluster.endpoint
